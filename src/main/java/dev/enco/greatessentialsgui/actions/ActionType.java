@@ -14,7 +14,8 @@ public enum ActionType {
     NEXT(new NextPageAction()),
     PREV(new PrevPageAction()),
     UPDATE(new UpdateAction()),
-    PLAYER(new PlayerAction());
+    PLAYER(new PlayerAction()),
+    REOPEN(new ReopenAction());
 
     private final Action action;
 
