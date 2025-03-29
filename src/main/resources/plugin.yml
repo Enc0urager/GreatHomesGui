@@ -1,5 +1,0 @@
-name: GreatEssentialsGui
-version: '${project.version}'
-main: dev.enco.greatessentialsgui.Main
-api-version: '1.16'
-depend: [Essentials]
