@@ -70,10 +70,12 @@ public class HomesMenu {
             var meta = item.getItemMeta();
             List<String> replacedLore = new ArrayList<>();
             var translations = config.getWorldsTranslations();
+            var worldName = location.getWorld().getName();
+            var world = translations.getOrDefault(worldName, worldName);
             meta.getLore().forEach(str -> {
                 replacedLore.add(str.replace("{num}", String.valueOf(num))
                         .replace("{name}", key)
-                        .replace("{world}", translations.get(location.getWorld().getName()))
+                        .replace("{world}", world)
                         .replace("{x}", Number.format(location.getX()))
                         .replace("{y}", Number.format(location.getY()))
                         .replace("{z}", Number.format(location.getZ())));
