@@ -79,9 +79,9 @@ public class WarpsMenu {
             var meta = item.getItemMeta();
             List<String> replacedLore = new ArrayList<>();
             var translations = config.getWorldsTranslations();
-            var worldName = location.getWorld().getName();
             var owner = Bukkit.getOfflinePlayer(warps.getLastOwner(key)).getName();
-            var world = translations.getOrDefault(worldName, "Add world to config");
+            var worldName = location.getWorld().getName();
+            var world = translations.getOrDefault(worldName, worldName);
             var x = Number.format(location.getX());
             var y = Number.format(location.getY());
             var z = Number.format(location.getZ());
