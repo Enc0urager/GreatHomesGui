@@ -8,5 +8,5 @@ import org.jetbrains.annotations.NotNull;
 
 
 public interface Action {
-    void execute(@NotNull Player player, PaginatedGui gui, String context) throws WarpNotFoundException, InvalidWorldException;
+    void execute(@NotNull Player player, PaginatedGui gui, String context) throws Exception;
 }

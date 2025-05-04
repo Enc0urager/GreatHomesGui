@@ -9,6 +9,12 @@ public class PrevPageAction implements Action {
     @Override
     public void execute(@NotNull Player player, PaginatedGui gui, String context) {
         gui.previous();
-        gui.updateTitle(gui.getTitle().replace("{current_page}", String.valueOf(gui.getCurrentPageNum())).replace("{pages}", String.valueOf(gui.getPagesNum())));
+        String title = gui.getTitle();
+        String id = gui.getId();
+        if (id.startsWith("kit "))
+            title = title.replace("{name}", id.replace("kit ", ""));
+        gui.updateTitle(title
+                .replace("{current_page}", String.valueOf(gui.getCurrentPageNum()))
+                .replace("{pages}", String.valueOf(gui.getPagesNum())));
     }
 }

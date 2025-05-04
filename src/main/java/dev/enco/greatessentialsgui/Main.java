@@ -4,6 +4,7 @@ import com.earth2me.essentials.Essentials;
 import dev.enco.greatessentialsgui.commands.ReloadCommand;
 import dev.enco.greatessentialsgui.listeners.FloatingPriorityListener;
 import dev.enco.greatessentialsgui.menus.HomesMenu;
+import dev.enco.greatessentialsgui.menus.KitPreviewMenu;
 import dev.enco.greatessentialsgui.menus.WarpsMenu;
 import dev.enco.greatessentialsgui.utils.Config;
 import dev.enco.greatessentialsgui.utils.Logger;
@@ -21,6 +22,7 @@ public final class Main extends JavaPlugin {
     @Setter
     private HomesMenu homesMenu;
     private WarpsMenu warpsMenu;
+    private KitPreviewMenu kitPreviewMenu;
 
     @Override
     public void onEnable() {
@@ -30,9 +32,10 @@ public final class Main extends JavaPlugin {
         pluginConfig.load();
         this.homesMenu = new HomesMenu(pluginConfig);
         this.warpsMenu = new WarpsMenu(pluginConfig);
+        this.kitPreviewMenu = new KitPreviewMenu(pluginConfig);
         FloatingPriorityListener listener;
         try {
-            listener = FloatingPriorityListener.valueOf(this.pluginConfig.priority);
+            listener = FloatingPriorityListener.valueOf(this.pluginConfig.getPriority());
         } catch (IllegalArgumentException e) {
             Logger.warn("Неизвестный приоритет слушателя, используем HIGHEST");
             listener = FloatingPriorityListener.HIGHEST;

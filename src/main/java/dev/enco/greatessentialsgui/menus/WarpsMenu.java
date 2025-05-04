@@ -4,18 +4,15 @@ import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.commands.WarpNotFoundException;
 import dev.enco.greatessentialsgui.Main;
 import dev.enco.greatessentialsgui.actions.ActionExecutor;
-import dev.enco.greatessentialsgui.objects.WarpsGui;
-import dev.enco.greatessentialsgui.utils.Colorizer;
+import dev.enco.greatessentialsgui.builder.DefaultGuiBuilder;
+import dev.enco.greatessentialsgui.objects.MenuContext;
 import dev.enco.greatessentialsgui.utils.Config;
 import dev.enco.greatessentialsgui.utils.Number;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
-import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.PaginatedGui;
 import lombok.Setter;
 import net.ess3.api.InvalidWorldException;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -26,7 +23,7 @@ public class WarpsMenu {
     private final Config config;
     private final Essentials essentials = Main.getInstance().getEss();
     @Setter
-    private WarpsGui warpsGui;
+    private MenuContext warpsGui;
 
     public WarpsMenu(Config config) {
         this.config = config;
@@ -34,35 +31,15 @@ public class WarpsMenu {
     }
 
     public PaginatedGui get(Player player) throws WarpNotFoundException, InvalidWorldException {
-        var gui = Gui.paginated().title(Component.text(Colorizer.colorize(warpsGui.title()))).rows(warpsGui.rows()).pageSize(warpsGui.maxPageItems()).disableAllInteractions().create();
-        gui.setId("warps");
-        if (warpsGui.menuItems() != null && !warpsGui.menuItems().isEmpty()) {
-            warpsGui.menuItems().forEach(menuItem -> {
-                var guiItem = ItemBuilder.from(menuItem.itemStack()).asGuiItem(e -> {
-                    if (e.isLeftClick()) {
-                        ActionExecutor.execute(player, gui, menuItem.leftClickActions(), "");
-                    } else if (e.isRightClick()) {
-                        ActionExecutor.execute(player, gui, menuItem.rightClickActions(), "");
-                    }
-                });
-                menuItem.slots().forEach(slot -> {
-                    gui.setItem(slot, guiItem);
-                });
-            });
-        }
-        warpsGui.border().forEach(slot -> {
-            gui.setItem(slot, ItemBuilder.from(Material.AIR).asGuiItem());
-        });
+        var gui = DefaultGuiBuilder.buildDefault(warpsGui, player);
+        gui.setId("homes");
         setWarps(gui, player);
-        gui.updateTitle(warpsGui.title().
-                replace("{current_page}", String.valueOf(gui.getCurrentPageNum()))
-                .replace("{pages}", String.valueOf(gui.getPagesNum())));
-        gui.update();
+        DefaultGuiBuilder.updateTitle(warpsGui, gui);
         return gui;
     }
 
     private void setWarps(PaginatedGui gui, Player player) throws WarpNotFoundException, InvalidWorldException {
-        var warpMenuItem = warpsGui.warpItem();
+        var warpMenuItem = warpsGui.extraItem();
         var warps = essentials.getWarps();
         var warpsList = new ArrayList<>(warps.getList());
         var blacklist = config.getBlacklistWarps();
@@ -79,7 +56,10 @@ public class WarpsMenu {
             var meta = item.getItemMeta();
             List<String> replacedLore = new ArrayList<>();
             var translations = config.getWorldsTranslations();
-            var owner = Bukkit.getOfflinePlayer(warps.getLastOwner(key)).getName();
+            var offlinePlayer = Bukkit.getOfflinePlayer(warps.getLastOwner(key));
+            String owner;
+            if (offlinePlayer != null) owner = offlinePlayer.getName();
+            else owner = config.getIncorrectUUID();
             var worldName = location.getWorld().getName();
             var world = translations.getOrDefault(worldName, worldName);
             var x = Number.format(location.getX());

@@ -1,8 +1,11 @@
 package dev.enco.greatessentialsgui.listeners;
 
+import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.commands.WarpNotFoundException;
 import dev.enco.greatessentialsgui.Main;
+import dev.enco.greatessentialsgui.actions.ActionExecutor;
 import dev.enco.greatessentialsgui.menus.HomesMenu;
+import dev.enco.greatessentialsgui.menus.KitPreviewMenu;
 import dev.enco.greatessentialsgui.menus.WarpsMenu;
 import dev.enco.greatessentialsgui.utils.Config;
 import lombok.Getter;
@@ -13,13 +16,15 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
+import java.util.List;
+
 @Getter
 public enum FloatingPriorityListener {
     LOWEST(new FloatingPriorityListener.CommandListener() {
         @EventHandler(
                 priority = EventPriority.LOWEST
         )
-        public void onCommand(PlayerCommandPreprocessEvent e) {
+        public void onCommand(PlayerCommandPreprocessEvent e) throws Exception {
             this.listenCommand(e);
         }
     }),
@@ -27,7 +32,7 @@ public enum FloatingPriorityListener {
         @EventHandler(
                 priority = EventPriority.LOW
         )
-        public void onCommand(PlayerCommandPreprocessEvent e) {
+        public void onCommand(PlayerCommandPreprocessEvent e) throws Exception {
             this.listenCommand(e);
         }
     }),
@@ -35,7 +40,7 @@ public enum FloatingPriorityListener {
         @EventHandler(
                 priority = EventPriority.NORMAL
         )
-        public void onCommand(PlayerCommandPreprocessEvent e) {
+        public void onCommand(PlayerCommandPreprocessEvent e) throws Exception {
             this.listenCommand(e);
         }
     }),
@@ -43,7 +48,7 @@ public enum FloatingPriorityListener {
         @EventHandler(
                 priority = EventPriority.HIGH
         )
-        public void onCommand(PlayerCommandPreprocessEvent e) {
+        public void onCommand(PlayerCommandPreprocessEvent e) throws Exception {
             this.listenCommand(e);
         }
     }),
@@ -51,7 +56,7 @@ public enum FloatingPriorityListener {
         @EventHandler(
                 priority = EventPriority.HIGHEST
         )
-        public void onCommand(PlayerCommandPreprocessEvent e) {
+        public void onCommand(PlayerCommandPreprocessEvent e) throws Exception {
             this.listenCommand(e);
         }
     }),
@@ -59,7 +64,7 @@ public enum FloatingPriorityListener {
         @EventHandler(
                 priority = EventPriority.MONITOR
         )
-        public void onCommand(PlayerCommandPreprocessEvent e) {
+        public void onCommand(PlayerCommandPreprocessEvent e) throws Exception {
             this.listenCommand(e);
         }
     });
@@ -73,13 +78,24 @@ public enum FloatingPriorityListener {
     private abstract static class CommandListener implements Listener {
         private final HomesMenu homesMenu = Main.getInstance().getHomesMenu();
         private final WarpsMenu warpsMenu = Main.getInstance().getWarpsMenu();
+        private final KitPreviewMenu previewMenu = Main.getInstance().getKitPreviewMenu();
         private final Config config = Main.getInstance().getPluginConfig();
+        private final Essentials essentials = Main.getInstance().getEss();
 
-        public void listenCommand(PlayerCommandPreprocessEvent e) {
+        public void listenCommand(PlayerCommandPreprocessEvent e) throws Exception {
             Player player = e.getPlayer();
             var command = e.getMessage();
             var homeCmds = config.getHomesOpenCommands();
             var warpCmds = config.getWarpsOpenCommands();
+            var previewCmds = config.getPreviewOpenCommands();
+            var parts = command.split(" ");
+            if (parts.length == 2 && previewCmds.contains(parts[0])) {
+                e.setCancelled(true);
+                var kitName = parts[1];
+                if (essentials.getKits().getKitKeys().contains(kitName))
+                    previewMenu.get(player, kitName).open(player);
+                else ActionExecutor.execute(player, null, config.getKitNotAvailableActions(), kitName);
+            }
             if (homeCmds.contains(command)) {
                 e.setCancelled(true);
                 homesMenu.get(player).open(player);

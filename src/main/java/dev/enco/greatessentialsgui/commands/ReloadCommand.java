@@ -28,6 +28,7 @@ public class ReloadCommand implements CommandExecutor, TabCompleter {
         config.load();
         plugin.getHomesMenu().setHomesGui(config.getHomesGui());
         plugin.getWarpsMenu().setWarpsGui(config.getWarpsGui());
+        plugin.getKitPreviewMenu().setContext(config.getKitPreviewGui());
         sender.sendMessage(ChatColor.GREEN + "Конфиг перезагружен за " + (System.currentTimeMillis() - start) + " ms.");
         return true;
     }

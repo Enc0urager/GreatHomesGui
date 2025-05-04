@@ -1,9 +1,8 @@
 package dev.enco.greatessentialsgui.actions;
 
-import com.earth2me.essentials.commands.WarpNotFoundException;
+import dev.enco.greatessentialsgui.utils.Logger;
 import dev.triumphteam.gui.guis.PaginatedGui;
 import lombok.experimental.UtilityClass;
-import net.ess3.api.InvalidWorldException;
 import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.Map;
@@ -17,10 +16,8 @@ public class ActionExecutor {
                 try {
                     type.getAction().execute(player, gui, context
                             .replace("{name}", name).replace("{player}", player.getName()));
-                } catch (WarpNotFoundException e) {
-                    throw new RuntimeException(e);
-                } catch (InvalidWorldException e) {
-                    throw new RuntimeException(e);
+                } catch (Exception e) {
+                    Logger.warn("Ошибка при выполнении действия " + context + " " + e);
                 }
             }
         });

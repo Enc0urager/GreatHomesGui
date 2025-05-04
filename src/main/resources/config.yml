@@ -22,6 +22,10 @@ homes-open-commands:
 warps-open-commands:
   - /warp
   - /warps
+preview-open-commands:
+  - /kitpreview
+actions-on-kit-not-available:
+  - '[MESSAGE] &cНабор &6{name} &cне существует!'
 #Варпы которые не будут добавляться в меню
 black-list-warps:
   - cases
@@ -29,6 +33,7 @@ black-list-warps:
 worlds-translations:
   rtp: '&aОбычный'
   world-nether: '&cАдский'
+incorrect-uuid: 'Не существует'
 homes-menu:
   rows: 6
   title: '&8Точки дома {current_page}/{pages}'
@@ -142,6 +147,75 @@ warps-menu:
     on-left-click:
       - '[PLAYER] /warp {name}'
     on-right-click: []
+  items:
+    exit-item:
+      slots: 49
+      amount: 1
+      name: '&cВыйти'
+      lore: [ ]
+      material: basehead-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2VkMWFiYTczZjYzOWY0YmM0MmJkNDgxOTZjNzE1MTk3YmUyNzEyYzNiOTYyYzk3ZWJmOWU5ZWQ4ZWZhMDI1In19fQ==
+      model-data: 0
+      enchantments: [ ]
+      item-flags: [ ]
+      on-left-click:
+        - '[SOUND] ENTITY_ENDERMAN_TELEPORT;1.0F;1.0F'
+        - '[CLOSE]'
+      on-right-click:
+        - '[SOUND] ENTITY_ENDERMAN_TELEPORT;1.0F;1.0F'
+        - '[CLOSE]'
+    next-page:
+      slots: 50
+      amount: 1
+      name: '&6Следующая страница'
+      lore: [ ]
+      material: ARROW
+      model-data: 0
+      enchantments: [ ]
+      item-flags: [ ]
+      on-left-click:
+        - '[SOUND] ENTITY_ENDERMAN_TELEPORT;1.0F;1.0F'
+        - '[NEXT]'
+        - '[UPDATE]'
+      on-right-click:
+        - '[SOUND] ENTITY_ENDERMAN_TELEPORT;1.0F;1.0F'
+        - '[NEXT]'
+        - '[UPDATE]'
+    prev-page:
+      slots: 48
+      amount: 1
+      name: '&6Предыдущая страница'
+      lore: [ ]
+      material: ARROW
+      model-data: 0
+      enchantments: [ ]
+      item-flags: [ ]
+      on-left-click:
+        - '[SOUND] ENTITY_ENDERMAN_TELEPORT;1.0F;1.0F'
+        - '[PREV]'
+        - '[UPDATE]'
+      on-right-click:
+        - '[SOUND] ENTITY_ENDERMAN_TELEPORT;1.0F;1.0F'
+        - '[PREV]'
+        - '[UPDATE]'
+    orange-pane:
+      slots: 0-9,17,18,26,27,35,36,44-47,51-53
+      name: '&r'
+      amount: 1
+      lore: [ ]
+      material: ORANGE_STAINED_GLASS_PANE
+      model-data: 0
+      enchantments:
+        - MENDING;1
+      item-flags:
+        - HIDE_ENCHANTS
+      on-left-click: [ ]
+      on-right-click: [ ]
+
+kitpreview-menu:
+  rows: 6
+  title: '&8Набор {name} {current_page}/{pages}'
+  border: 10-16,19,25,28,34,37-43
+  max-page-items: 10
   items:
     exit-item:
       slots: 49
