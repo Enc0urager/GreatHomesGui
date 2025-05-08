@@ -16,8 +16,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-import java.util.List;
-
 @Getter
 public enum FloatingPriorityListener {
     LOWEST(new FloatingPriorityListener.CommandListener() {
@@ -103,9 +101,7 @@ public enum FloatingPriorityListener {
                 e.setCancelled(true);
                 try {
                     warpsMenu.get(player).open(player);
-                } catch (WarpNotFoundException ex) {
-                    throw new RuntimeException(ex);
-                } catch (InvalidWorldException ex) {
+                } catch (WarpNotFoundException | InvalidWorldException ex) {
                     throw new RuntimeException(ex);
                 }
             }

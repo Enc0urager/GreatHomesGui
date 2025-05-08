@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import java.lang.reflect.InvocationTargetException;
 
 @Getter
 public final class Main extends JavaPlugin {
@@ -32,7 +33,11 @@ public final class Main extends JavaPlugin {
         pluginConfig.load();
         this.homesMenu = new HomesMenu(pluginConfig);
         this.warpsMenu = new WarpsMenu(pluginConfig);
-        this.kitPreviewMenu = new KitPreviewMenu(pluginConfig);
+        try {
+            this.kitPreviewMenu = new KitPreviewMenu(pluginConfig);
+        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
         FloatingPriorityListener listener;
         try {
             listener = FloatingPriorityListener.valueOf(this.pluginConfig.getPriority());
