@@ -7,14 +7,12 @@ import dev.enco.greatessentialsgui.actions.ActionExecutor;
 import dev.enco.greatessentialsgui.builder.DefaultGuiBuilder;
 import dev.enco.greatessentialsgui.objects.MenuContext;
 import dev.enco.greatessentialsgui.utils.Config;
-import dev.enco.greatessentialsgui.utils.Number;
+import dev.enco.greatessentialsgui.utils.Placeholders;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.PaginatedGui;
 import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import java.util.ArrayList;
-import java.util.List;
 
 public class HomesMenu {
     private final Config config;
@@ -29,7 +27,7 @@ public class HomesMenu {
 
     public PaginatedGui get(Player player) {
         var user = essentials.getUser(player);
-        var gui = DefaultGuiBuilder.buildDefault(homesGui, player);
+        var gui = DefaultGuiBuilder.buildDefault(homesGui, player, "");
         gui.setId("homes");
         setHomes(gui, user, player);
         DefaultGuiBuilder.updateTitle(homesGui, gui);
@@ -45,20 +43,20 @@ public class HomesMenu {
             int num = i + 1;
             var item = new ItemStack(homeMenuItem.itemStack());
             var meta = item.getItemMeta();
-            List<String> replacedLore = new ArrayList<>();
             var translations = config.getWorldsTranslations();
             var worldName = location.getWorld().getName();
             var world = translations.getOrDefault(worldName, worldName);
-            meta.getLore().forEach(str -> {
-                replacedLore.add(str.replace("{num}", String.valueOf(num))
-                        .replace("{name}", key)
-                        .replace("{world}", world)
-                        .replace("{x}", Number.format(location.getX()))
-                        .replace("{y}", Number.format(location.getY()))
-                        .replace("{z}", Number.format(location.getZ())));
-            });
-            meta.setDisplayName(meta.getDisplayName().replace("{num}", String.valueOf(num)).replace("{name}", key));
-            meta.setLore(replacedLore);
+            String[] replacement = {String.valueOf(num), key,
+                    Placeholders.format(location.getX()),
+                    Placeholders.format(location.getY()),
+                    Placeholders.format(location.getZ()),
+                    world,
+            };
+            meta.setDisplayName(Placeholders.replaceInMessage(player, meta.getDisplayName(), replacement));
+            meta.setLore(meta.getLore().stream()
+                    .map(str -> Placeholders.replaceInMessage(player, str, replacement))
+                    .toList()
+            );
             item.setItemMeta(meta);
             var guiItem = ItemBuilder.from(item).asGuiItem(e -> {
                 if (e.isLeftClick()) {

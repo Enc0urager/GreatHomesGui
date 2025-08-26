@@ -1,14 +1,15 @@
 package dev.enco.greatessentialsgui.builder;
 
 import com.destroystokyo.paper.profile.ProfileProperty;
-import dev.enco.greatessentialsgui.utils.Colorizer;
-import dev.enco.greatessentialsgui.utils.Logger;
+import dev.enco.greatessentialsgui.utils.colorizer.Colorizer;
+import dev.enco.greatessentialsgui.utils.logger.Logger;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -44,12 +45,12 @@ public class ItemBuilder {
         meta.setDisplayName(Colorizer.colorize(section.getString("name")));
         meta.setCustomModelData(section.getInt("model-data"));
         var flags = FlagsParser.parse(section.getStringList("item-flags"));
-        flags.forEach(flag -> {
+        for (var flag : flags) {
             meta.addItemFlags(flag);
-        });
+        }
         var enchants = EnchantsParser.parse(section.getStringList("enchantments"));
-        enchants.forEach(enchant -> {
-            meta.addEnchant(enchant.left(), enchant.right(), true);
+        enchants.forEach((enchant, level) -> {
+            meta.addEnchant(enchant, level, true);
         });
         itemStack.setItemMeta(meta);
         return itemStack;

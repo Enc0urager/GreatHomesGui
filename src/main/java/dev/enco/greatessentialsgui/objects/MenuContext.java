@@ -1,13 +1,13 @@
 package dev.enco.greatessentialsgui.objects;
 
-import java.util.List;
-import java.util.Set;
+import com.google.common.collect.ImmutableSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
 
 public record MenuContext(
         String title,
-        List<Integer> border,
+        IntSet border,
         int rows,
         int maxPageItems,
         MenuItem extraItem,
-        Set<MenuItem> menuItems
+        ImmutableSet<MenuItem> menuItems
 ) {}

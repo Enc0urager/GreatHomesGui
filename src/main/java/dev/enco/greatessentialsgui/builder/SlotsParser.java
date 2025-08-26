@@ -1,13 +1,14 @@
 package dev.enco.greatessentialsgui.builder;
-import lombok.experimental.UtilityClass;
 
-import java.util.ArrayList;
-import java.util.List;
+
+import it.unimi.dsi.fastutil.ints.IntArraySet;
+import it.unimi.dsi.fastutil.ints.IntSet;
+import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class SlotsParser {
-    public List<Integer> parse(String settings) {
-        List<Integer> result = new ArrayList<>();
+    public IntSet parse(String settings) {
+        IntSet result = new IntArraySet();
         var parts = settings.split(",");
         for (String part : parts) {
             if (part.contains("-")) {

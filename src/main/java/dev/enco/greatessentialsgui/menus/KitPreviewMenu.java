@@ -8,7 +8,8 @@ import dev.enco.greatessentialsgui.Main;
 import dev.enco.greatessentialsgui.builder.DefaultGuiBuilder;
 import dev.enco.greatessentialsgui.objects.MenuContext;
 import dev.enco.greatessentialsgui.utils.Config;
-import dev.enco.greatessentialsgui.utils.Logger;
+import dev.enco.greatessentialsgui.utils.Placeholders;
+import dev.enco.greatessentialsgui.utils.logger.Logger;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.PaginatedGui;
 import lombok.Setter;
@@ -16,6 +17,7 @@ import net.ess3.provider.SerializationProvider;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,13 +46,11 @@ public class KitPreviewMenu {
     }
 
     public PaginatedGui get(Player player, String kitName) throws Exception {
-        var gui = DefaultGuiBuilder.buildDefault(context, player);
+        var gui = DefaultGuiBuilder.buildDefault(context, player, kitName);
         gui.setId("kit " + kitName);
         setKitItems(gui, kitName);
-        gui.updateTitle(context.title()
-                .replace("{name}", kitName)
-                .replace("{current_page}", String.valueOf(gui.getCurrentPageNum()))
-                .replace("{pages}", String.valueOf(gui.getPagesNum())));
+        gui.updateTitle(Placeholders.replaceInMessage(player, context.title(),
+                String.valueOf(gui.getCurrentPageNum()), String.valueOf(gui.getPagesNum()), kitName));
         gui.update();
         return gui;
     }

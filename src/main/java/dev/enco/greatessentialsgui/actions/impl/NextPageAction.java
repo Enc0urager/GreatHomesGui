@@ -1,20 +1,16 @@
 package dev.enco.greatessentialsgui.actions.impl;
 
 import dev.enco.greatessentialsgui.actions.Action;
+import dev.enco.greatessentialsgui.actions.context.GuiContext;
 import dev.triumphteam.gui.guis.PaginatedGui;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class NextPageAction implements Action {
+public class NextPageAction implements Action<GuiContext> {
     @Override
-    public void execute(@NotNull Player player, PaginatedGui gui, String context) {
+    public void execute(@NotNull Player player, @Nullable PaginatedGui gui, @Nullable GuiContext context, @Nullable String... replacement) {
         gui.next();
-        String title = gui.getTitle();
-        String id = gui.getId();
-        if (id.startsWith("kit "))
-            title = title.replace("{name}", id.replace("kit ", ""));
-        gui.updateTitle(title
-                .replace("{current_page}", String.valueOf(gui.getCurrentPageNum()))
-                .replace("{pages}", String.valueOf(gui.getPagesNum())));
+        gui.updateTitle(gui.getTitle().replace("{current_page}", String.valueOf(gui.getCurrentPageNum())).replace("{pages}", String.valueOf(gui.getPagesNum())));
     }
 }

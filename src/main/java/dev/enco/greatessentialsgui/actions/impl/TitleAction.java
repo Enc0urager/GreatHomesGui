@@ -1,16 +1,19 @@
 package dev.enco.greatessentialsgui.actions.impl;
 
 import dev.enco.greatessentialsgui.actions.Action;
+import dev.enco.greatessentialsgui.actions.context.TitleContext;
+import dev.enco.greatessentialsgui.utils.Placeholders;
 import dev.triumphteam.gui.guis.PaginatedGui;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class TitleAction implements Action {
+public class TitleAction implements Action<TitleContext> {
+
     @Override
-    public void execute(@NotNull Player player, PaginatedGui gui, String context) {
-        var args = context.split(";");
-        var title = args.length > 0 ? args[0] : "";
-        var subTitle = args.length > 1 ? args[1] : "";
-        player.sendTitle(title, subTitle, 10, 70, 20);
+    public void execute(@NotNull Player player, @Nullable PaginatedGui gui, @Nullable TitleContext context, @Nullable String... replacement) {
+        player.sendTitle(Placeholders.replaceInMessage(player, context.title(), replacement),
+                Placeholders.replaceInMessage(player, context.subtitle(), replacement),
+                context.fadeIn(), context.fadeIn(), context.fadeOut());
     }
 }

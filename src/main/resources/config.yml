@@ -13,6 +13,8 @@
 #[REOPEN] - reopen gui
 #Все материалы поддерживают basehead-id
 
+colorizer: LEGACY
+use-papi: true
 decimal-format: "#.#"
 event-priority: HIGHEST
 no-perms: "&cУ вас недостаточно прав!"
@@ -25,7 +27,7 @@ warps-open-commands:
 preview-open-commands:
   - /kitpreview
 actions-on-kit-not-available:
-  - '[MESSAGE] &cНабор &6{name} &cне существует!'
+  - '[MESSAGE] &cНабор &6{0} &cне существует!'
 #Варпы которые не будут добавляться в меню
 black-list-warps:
   - cases
@@ -36,7 +38,7 @@ worlds-translations:
 incorrect-uuid: 'Не существует'
 homes-menu:
   rows: 6
-  title: '&8Точки дома {current_page}/{pages}'
+  title: '&8Точки дома {0}/{1}'
   #Здесь вы можете указать слоты в которые не будут добавляться home-item
   border: 10-16,19,25,28,34,37-43
   #Сколько предметов home-item будет добавляться на 1 страницу
@@ -44,11 +46,11 @@ homes-menu:
   home-item:
     material: BOOK
     amount: 1
-    name: '&6#{num} &fТочка дома: &6{name}'
+    name: '&6#{0} &fТочка дома: &6{1}'
     lore:
       - ''
-      - '&fКоординаты: &6{x} {y} {z}'
-      - '&fМир: {world}'
+      - '&fКоординаты: &6{2} {3} {4}'
+      - '&fМир: {5}'
       - ''
       - '&fЛКМ - Телепортироваться на точку дома'
       - '&fПКМ - Удалить точку дома'
@@ -57,9 +59,9 @@ homes-menu:
     enchantments: []
     item-flags: []
     on-left-click:
-      - '[PLAYER] /home {name}'
+      - '[PLAYER] /home {0}'
     on-right-click:
-      - '[PLAYER] /delhome {name}'
+      - '[PLAYER] /delhome {0}'
       - '[REOPEN]'
   items:
     exit-item:
@@ -126,18 +128,18 @@ homes-menu:
       on-right-click: []
 warps-menu:
   rows: 6
-  title: '&8Варпы {current_page}/{pages}'
+  title: '&8Варпы {0}/{1}'
   border: 10-16,19,25,28,34,37-43
   max-page-items: 10
   warp-item:
     material: BOOK
     amount: 1
-    name: '&6#{num} &fВарп: &6{name}'
+    name: '&6#{0} &fВарп: &6{1}'
     lore:
       - ''
-      - '&fКоординаты: &6{x} {y} {z}'
-      - '&fМир: {world}'
-      - '&fВладелец: &6{owner}'
+      - '&fКоординаты: &6{4} {5} {6}'
+      - '&fМир: {2}'
+      - '&fВладелец: &6{3}'
       - ''
       - '&fЛКМ - Телепортироваться на варп'
       - ''
@@ -145,7 +147,7 @@ warps-menu:
     enchantments: []
     item-flags: []
     on-left-click:
-      - '[PLAYER] /warp {name}'
+      - '[PLAYER] /warp {0}'
     on-right-click: []
   items:
     exit-item:
@@ -213,7 +215,7 @@ warps-menu:
 
 kitpreview-menu:
   rows: 6
-  title: '&8Набор {name} {current_page}/{pages}'
+  title: '&8Набор {2} {0}/{1}'
   border: 10-16,19,25,28,34,37-43
   max-page-items: 10
   items:
@@ -279,3 +281,20 @@ kitpreview-menu:
         - HIDE_ENCHANTS
       on-left-click: [ ]
       on-right-click: [ ]
+    kit:
+      slots: 53
+      amount: 1
+      name: '&cПолучить набор'
+      lore: [ ]
+      material: basehead-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2VkMWFiYTczZjYzOWY0YmM0MmJkNDgxOTZjNzE1MTk3YmUyNzEyYzNiOTYyYzk3ZWJmOWU5ZWQ4ZWZhMDI1In19fQ==
+      model-data: 0
+      enchantments: [ ]
+      item-flags: [ ]
+      on-left-click:
+        - '[PLAYER] /kit {0}'
+        - '[SOUND] ENTITY_ENDERMAN_TELEPORT;1.0F;1.0F'
+        - '[CLOSE]'
+      on-right-click:
+        - '[PLAYER] /kit {0}'
+        - '[SOUND] ENTITY_ENDERMAN_TELEPORT;1.0F;1.0F'
+        - '[CLOSE]'

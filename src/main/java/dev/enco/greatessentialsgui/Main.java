@@ -7,11 +7,12 @@ import dev.enco.greatessentialsgui.menus.HomesMenu;
 import dev.enco.greatessentialsgui.menus.KitPreviewMenu;
 import dev.enco.greatessentialsgui.menus.WarpsMenu;
 import dev.enco.greatessentialsgui.utils.Config;
-import dev.enco.greatessentialsgui.utils.Logger;
+import dev.enco.greatessentialsgui.utils.logger.Logger;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+
 import java.lang.reflect.InvocationTargetException;
 
 @Getter
@@ -28,6 +29,7 @@ public final class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        Logger.setup();
         saveDefaultConfig();
         this.pluginConfig = new Config(this);
         pluginConfig.load();

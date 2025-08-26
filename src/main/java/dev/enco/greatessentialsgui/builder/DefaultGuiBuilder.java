@@ -12,26 +12,26 @@ import org.bukkit.entity.Player;
 
 @UtilityClass
 public class DefaultGuiBuilder {
-    public PaginatedGui buildDefault(MenuContext context, Player player) {
+    public PaginatedGui buildDefault(MenuContext context, Player player, String... replacement) {
         var gui = Gui.paginated().title(Component.text(context.title()))
                 .rows(context.rows()).pageSize(context.maxPageItems()).disableAllInteractions().create();
         if (context.menuItems() != null && !context.menuItems().isEmpty()) {
-            context.menuItems().forEach(menuItem -> {
+            for (var menuItem : context.menuItems()) {
                 var guiItem = ItemBuilder.from(menuItem.itemStack()).asGuiItem(e -> {
                     if (e.isLeftClick()) {
-                        ActionExecutor.execute(player, gui, menuItem.leftClickActions(), "");
+                        ActionExecutor.execute(player, gui, menuItem.leftClickActions(), replacement);
                     } else if (e.isRightClick()) {
-                        ActionExecutor.execute(player, gui, menuItem.rightClickActions(), "");
+                        ActionExecutor.execute(player, gui, menuItem.rightClickActions(), replacement);
                     }
                 });
-                menuItem.slots().forEach(slot -> {
+                for (var slot : menuItem.slots()) {
                     gui.setItem(slot, guiItem);
-                });
-            });
+                }
+            }
         }
-        context.border().forEach(slot -> {
+        for (var slot : context.border()) {
             gui.setItem(slot, ItemBuilder.from(Material.AIR).asGuiItem());
-        });
+        }
         return gui;
     }
 
