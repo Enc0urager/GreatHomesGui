@@ -9,5 +9,6 @@ public record MenuContext(
         int rows,
         int maxPageItems,
         MenuItem extraItem,
+        MenuItem emptyItem,
         ImmutableSet<MenuItem> menuItems
 ) {}

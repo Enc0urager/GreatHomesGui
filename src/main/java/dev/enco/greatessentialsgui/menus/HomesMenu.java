@@ -6,6 +6,7 @@ import dev.enco.greatessentialsgui.Main;
 import dev.enco.greatessentialsgui.actions.ActionExecutor;
 import dev.enco.greatessentialsgui.builder.DefaultGuiBuilder;
 import dev.enco.greatessentialsgui.objects.MenuContext;
+import dev.enco.greatessentialsgui.objects.MenuItem;
 import dev.enco.greatessentialsgui.utils.Config;
 import dev.enco.greatessentialsgui.utils.Placeholders;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
@@ -30,13 +31,25 @@ public class HomesMenu {
         var gui = DefaultGuiBuilder.buildDefault(homesGui, player, "");
         gui.setId("homes");
         setHomes(gui, user, player);
-        DefaultGuiBuilder.updateTitle(homesGui, gui);
+        DefaultGuiBuilder.updateTitle(homesGui, gui, "");
         return gui;
     }
 
     private void setHomes(PaginatedGui gui, User user, Player player) {
         var homeMenuItem = homesGui.extraItem();
         var homes = user.getHomes();
+        if (homes.isEmpty()) {
+            MenuItem emptyItem = homesGui.emptyItem();
+            var guiItem = ItemBuilder.from(emptyItem.itemStack()).asGuiItem(e -> {
+                if (e.isLeftClick()) {
+                    ActionExecutor.execute(player, gui, emptyItem.leftClickActions());
+                } else if (e.isRightClick()) {
+                    ActionExecutor.execute(player, gui, emptyItem.rightClickActions());
+                }
+            });
+            for (var slot : emptyItem.slots()) gui.setItem(slot, guiItem);
+            return;
+        }
         for (int i = 0; i < homes.size(); i++) {
             var key = homes.get(i);
             var location = user.getHome(key);

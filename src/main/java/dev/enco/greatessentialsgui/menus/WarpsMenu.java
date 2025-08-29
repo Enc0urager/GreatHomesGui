@@ -7,6 +7,7 @@ import dev.enco.greatessentialsgui.Main;
 import dev.enco.greatessentialsgui.actions.ActionExecutor;
 import dev.enco.greatessentialsgui.builder.DefaultGuiBuilder;
 import dev.enco.greatessentialsgui.objects.MenuContext;
+import dev.enco.greatessentialsgui.objects.MenuItem;
 import dev.enco.greatessentialsgui.utils.Config;
 import dev.enco.greatessentialsgui.utils.Placeholders;
 import dev.enco.greatessentialsgui.utils.logger.Logger;
@@ -33,7 +34,7 @@ public class WarpsMenu {
         var gui = DefaultGuiBuilder.buildDefault(warpsGui, player, "");
         gui.setId("homes");
         setWarps(gui, player);
-        DefaultGuiBuilder.updateTitle(warpsGui, gui);
+        DefaultGuiBuilder.updateTitle(warpsGui, gui, "");
         return gui;
     }
 
@@ -80,6 +81,17 @@ public class WarpsMenu {
                         Logger.warn("An error occurred while gets warp location " + e);
                     }
                 });
+        if (index[0] == 0) {
+            MenuItem emptyItem = warpsGui.emptyItem();
+            var guiItem = ItemBuilder.from(emptyItem.itemStack()).asGuiItem(e -> {
+                if (e.isLeftClick()) {
+                    ActionExecutor.execute(player, gui, emptyItem.leftClickActions());
+                } else if (e.isRightClick()) {
+                    ActionExecutor.execute(player, gui, emptyItem.rightClickActions());
+                }
+            });
+            for (var slot : emptyItem.slots()) gui.setItem(slot, guiItem);
+        }
     }
 
     private String getWarpOwner(String key, Warps warps) {

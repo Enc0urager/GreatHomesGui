@@ -63,6 +63,17 @@ homes-menu:
     on-right-click:
       - '[PLAYER] /delhome {0}'
       - '[REOPEN]'
+  empty-item:
+    material: BARRIER
+    amount: 1
+    slots: 22
+    name: '&cНет точек дома'
+    lore: []
+    model-data: 0
+    enchantments: []
+    item-flags: []
+    on-left-click: []
+    on-right-click: []
   items:
     exit-item:
       slots: 49
@@ -149,6 +160,17 @@ warps-menu:
     on-left-click:
       - '[PLAYER] /warp {0}'
     on-right-click: []
+  empty-item:
+    material: BARRIER
+    amount: 1
+    slots: 22
+    name: '&cНет варпов'
+    lore: [ ]
+    model-data: 0
+    enchantments: [ ]
+    item-flags: [ ]
+    on-left-click: [ ]
+    on-right-click: [ ]
   items:
     exit-item:
       slots: 49

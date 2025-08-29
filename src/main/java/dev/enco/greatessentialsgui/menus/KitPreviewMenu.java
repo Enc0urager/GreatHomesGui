@@ -49,8 +49,7 @@ public class KitPreviewMenu {
         var gui = DefaultGuiBuilder.buildDefault(context, player, kitName);
         gui.setId("kit " + kitName);
         setKitItems(gui, kitName);
-        gui.updateTitle(Placeholders.replaceInMessage(player, context.title(),
-                String.valueOf(gui.getCurrentPageNum()), String.valueOf(gui.getPagesNum()), kitName));
+        DefaultGuiBuilder.updateTitle(context, gui, kitName);
         gui.update();
         return gui;
     }

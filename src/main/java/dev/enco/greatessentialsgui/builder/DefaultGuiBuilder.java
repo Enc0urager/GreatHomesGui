@@ -9,6 +9,13 @@ import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.optional.qual.OptionalBottom;
+import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.processing.SupportedOptions;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 @UtilityClass
 public class DefaultGuiBuilder {
@@ -35,10 +42,9 @@ public class DefaultGuiBuilder {
         return gui;
     }
 
-    public void updateTitle(MenuContext context, PaginatedGui gui) {
-        gui.updateTitle(context.title().
-                replace("{current_page}", String.valueOf(gui.getCurrentPageNum()))
-                .replace("{pages}", String.valueOf(gui.getPagesNum())));
+    public void updateTitle(MenuContext context, PaginatedGui gui, String kitName) {
+        gui.updateTitle(MessageFormat.format(context.title(),
+                String.valueOf(gui.getCurrentPageNum()), String.valueOf(gui.getPagesNum()), kitName));
         gui.update();
     }
 }

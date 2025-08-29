@@ -12,7 +12,6 @@ import dev.enco.greatessentialsgui.objects.MenuContext;
 import dev.enco.greatessentialsgui.objects.MenuItem;
 import dev.enco.greatessentialsgui.utils.colorizer.Colorizer;
 import dev.enco.greatessentialsgui.utils.logger.Logger;
-import it.unimi.dsi.fastutil.ints.IntArraySet;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -80,14 +79,10 @@ public class Config {
 
     private MenuContext buildMenuContext(ConfigurationSection section, String extraItemPath) {
         MenuItem menuItem = null;
+        MenuItem emptyItem = null;
         if (extraItemPath != null) {
-            var extraItemSection = section.getConfigurationSection(extraItemPath);
-            menuItem = new MenuItem(
-                    ItemBuilder.build(extraItemSection),
-                    new IntArraySet(),
-                    ActionRegistry.transform(extraItemSection.getStringList("on-left-click")),
-                    ActionRegistry.transform(extraItemSection.getStringList("on-right-click"))
-            );
+            menuItem = buildItem(section.getConfigurationSection(extraItemPath));
+            emptyItem = buildItem(section.getConfigurationSection("empty-item"));
         }
         var itemsSection = section.getConfigurationSection("items");
         return new MenuContext(
@@ -96,6 +91,7 @@ public class Config {
                 section.getInt("rows"),
                 section.getInt("max-page-items"),
                 menuItem,
+                emptyItem,
                 buildMenuItems(itemsSection)
         );
 
@@ -106,15 +102,18 @@ public class Config {
         if (itemsSection != null && !itemsSection.getKeys(false).isEmpty()) {
             itemsSection.getKeys(false).forEach(item -> {
                 var itemSection = itemsSection.getConfigurationSection(item);
-                var menuItem = new MenuItem(
-                        ItemBuilder.build(itemSection),
-                        SlotsParser.parse(itemSection.getString("slots")),
-                        ActionRegistry.transform(itemSection.getStringList("on-left-click")),
-                        ActionRegistry.transform(itemSection.getStringList("on-right-click"))
-                );
-                menuItems.add(menuItem);
+                menuItems.add(buildItem(itemSection));
             });
         }
         return ImmutableSet.copyOf(menuItems);
+    }
+
+    private MenuItem buildItem(ConfigurationSection itemSection) {
+        return new MenuItem(
+                ItemBuilder.build(itemSection),
+                SlotsParser.parse(itemSection.getString("slots")),
+                ActionRegistry.transform(itemSection.getStringList("on-left-click")),
+                ActionRegistry.transform(itemSection.getStringList("on-right-click"))
+        );
     }
 }

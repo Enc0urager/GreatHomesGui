@@ -8,6 +8,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class SlotsParser {
     public IntSet parse(String settings) {
+        if (settings == null) return null;
         IntSet result = new IntArraySet();
         var parts = settings.split(",");
         for (String part : parts) {
