@@ -8,15 +8,22 @@ import dev.enco.greatessentialsgui.actions.ActionType;
 import dev.enco.greatessentialsgui.actions.context.Context;
 import dev.enco.greatessentialsgui.builder.ItemBuilder;
 import dev.enco.greatessentialsgui.builder.SlotsParser;
+import dev.enco.greatessentialsgui.commands.EmptyCommand;
+import dev.enco.greatessentialsgui.commands.KitPreviewEmptyCommand;
 import dev.enco.greatessentialsgui.objects.MenuContext;
 import dev.enco.greatessentialsgui.objects.MenuItem;
 import dev.enco.greatessentialsgui.utils.colorizer.Colorizer;
 import dev.enco.greatessentialsgui.utils.logger.Logger;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandMap;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 @RequiredArgsConstructor @Getter
@@ -26,7 +33,8 @@ public class Config {
     private MenuContext homesGui, warpsGui, kitPreviewGui;
     private final Main plugin;
     private FileConfiguration config;
-    private Map<String, String> worldsTranslations;
+    private final Map<String, String> worldsTranslations = new HashMap<>();
+    private final Map<String, String> kitNames = new HashMap<>();
     private ImmutableMap<ActionType, List<Context>> kitNotAvailableActions;
     private String noPermsMessage, priority, incorrectUUID;
     @Getter
@@ -39,6 +47,12 @@ public class Config {
             config.set("no-perms", "&cИзвините, но у вас недостаточно прав");
             plugin.saveConfig();
         }
+        if (!config.contains("kit-names")) {
+            config.set("kit-names", Map.of("start", "Игрок", "vip", "Вип"));
+            plugin.saveConfig();
+        }
+        ConfigurationSection section = config.getConfigurationSection("kit-names");
+        section.getKeys(false).forEach(key -> kitNames.put(key, section.getString(key)));
         Colorizer.setColorizer(config.getString("colorizer"));
         this.usingPapi = config.getBoolean("use-papi");
         this.kitNotAvailableActions = ActionRegistry.transform(config.getStringList("actions-on-kit-not-available"));
@@ -46,10 +60,13 @@ public class Config {
         this.noPermsMessage = Colorizer.colorize(config.getString("no-perms"));
         this.priority = config.getString("event-priority");
         this.decimalFormat = config.getString("decimal-format");
-        this.worldsTranslations = new HashMap<>();
+        CommandMap map = getCommandMap();
         this.homesOpenCommands = ImmutableSet.copyOf(config.getStringList("homes-open-commands"));
         this.warpsOpenCommands = ImmutableSet.copyOf(config.getStringList("warps-open-commands"));
         this.previewOpenCommands = ImmutableSet.copyOf(config.getStringList("preview-open-commands"));
+        registerCommands(map, homesOpenCommands, false);
+        registerCommands(map, warpsOpenCommands, false);
+        registerCommands(map, previewOpenCommands, true);
         this.blacklistWarps = ImmutableSet.copyOf(config.getStringList("black-list-warps"));
         var worldsSection = config.getConfigurationSection("worlds-translations");
         worldsSection.getKeys(false).forEach(world -> {
@@ -60,6 +77,10 @@ public class Config {
         loadWarpsGui();
         loadKitPreviewGui();
         Logger.info("Конфиг успешно загружен за " + (System.currentTimeMillis() - start) + " ms.");
+    }
+
+    public String getKitName(String kit) {
+        return kitNames.getOrDefault(kit, kit);
     }
 
     private void loadHomesGui() {
@@ -115,5 +136,33 @@ public class Config {
                 ActionRegistry.transform(itemSection.getStringList("on-left-click")),
                 ActionRegistry.transform(itemSection.getStringList("on-right-click"))
         );
+    }
+
+    private CommandMap getCommandMap() {
+        try {
+            Server server = Bukkit.getServer();
+            Field commandMapField = server.getClass().getDeclaredField("commandMap");
+            commandMapField.setAccessible(true);
+            return (CommandMap) commandMapField.get(server);
+        } catch (Exception e) {
+            Logger.error("An error occured while getting CommandMap " + e);
+        }
+        return null;
+    }
+
+    private void registerCommands(CommandMap commandMap, ImmutableSet<String> commands, boolean kitPreview) {
+        for (String command : commands) {
+            String clean = command.substring(1);
+            if (isRegistered(commandMap, clean)) continue;
+
+            Command cmd = kitPreview ? new KitPreviewEmptyCommand(clean) : new EmptyCommand(clean);
+            commandMap.register("gegui", cmd);
+            Logger.info("Команда " + clean + " успешно зарегистрирована");
+        }
+    }
+
+    private boolean isRegistered(CommandMap map, String command) {
+        Command cmd = map.getCommand(command);
+        return cmd != null && cmd.isRegistered();
     }
 }

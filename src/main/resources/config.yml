@@ -18,6 +18,9 @@ use-papi: true
 decimal-format: "#.#"
 event-priority: HIGHEST
 no-perms: "&cУ вас недостаточно прав!"
+kit-names:
+  start: 'Игрока'
+  vip: 'Випа'
 homes-open-commands:
   - /home
   - /homes

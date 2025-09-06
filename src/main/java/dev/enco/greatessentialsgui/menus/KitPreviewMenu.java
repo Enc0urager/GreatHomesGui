@@ -8,7 +8,6 @@ import dev.enco.greatessentialsgui.Main;
 import dev.enco.greatessentialsgui.builder.DefaultGuiBuilder;
 import dev.enco.greatessentialsgui.objects.MenuContext;
 import dev.enco.greatessentialsgui.utils.Config;
-import dev.enco.greatessentialsgui.utils.Placeholders;
 import dev.enco.greatessentialsgui.utils.logger.Logger;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.PaginatedGui;
@@ -25,10 +24,12 @@ import java.util.List;
 public class KitPreviewMenu {
     private final Essentials essentials = Main.getInstance().getEss();
     private final SerializationProvider serializationProvider;
+    private final Config config;
     @Setter
     private MenuContext context;
 
     public KitPreviewMenu(Config config) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        this.config = config;
         this.context = config.getKitPreviewGui();
         this.serializationProvider = init();
     }
@@ -49,8 +50,7 @@ public class KitPreviewMenu {
         var gui = DefaultGuiBuilder.buildDefault(context, player, kitName);
         gui.setId("kit " + kitName);
         setKitItems(gui, kitName);
-        DefaultGuiBuilder.updateTitle(context, gui, kitName);
-        gui.update();
+        DefaultGuiBuilder.updateTitle(context, gui, config.getKitName(kitName));
         return gui;
     }
 
