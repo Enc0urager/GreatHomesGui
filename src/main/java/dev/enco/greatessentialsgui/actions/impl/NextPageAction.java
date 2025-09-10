@@ -1,5 +1,6 @@
 package dev.enco.greatessentialsgui.actions.impl;
 
+import dev.enco.greatessentialsgui.Main;
 import dev.enco.greatessentialsgui.actions.Action;
 import dev.enco.greatessentialsgui.actions.context.GuiContext;
 import dev.triumphteam.gui.guis.PaginatedGui;
@@ -13,6 +14,6 @@ public class NextPageAction implements Action<GuiContext> {
     @Override
     public void execute(@NotNull Player player, @Nullable PaginatedGui gui, @Nullable GuiContext context, @Nullable String... replacement) {
         gui.next();
-        gui.updateTitle(MessageFormat.format(gui.getTitle(),String.valueOf(gui.getCurrentPageNum()), String.valueOf(gui.getPagesNum()), replacement[0]));
+        gui.updateTitle(MessageFormat.format(gui.getTitle(),String.valueOf(gui.getCurrentPageNum()), String.valueOf(gui.getPagesNum()), Main.getInstance().getPluginConfig().getKitName(replacement[0])));
     }
 }
