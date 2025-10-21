@@ -4,7 +4,6 @@ import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.Warps;
 import com.earth2me.essentials.commands.WarpNotFoundException;
 import dev.enco.greatessentialsgui.Main;
-import dev.enco.greatessentialsgui.actions.ActionExecutor;
 import dev.enco.greatessentialsgui.builder.DefaultGuiBuilder;
 import dev.enco.greatessentialsgui.objects.MenuContext;
 import dev.enco.greatessentialsgui.objects.MenuItem;
@@ -71,9 +70,9 @@ public class WarpsMenu {
 
                         var guiItem = ItemBuilder.from(item).asGuiItem(e -> {
                             if (e.isLeftClick()) {
-                                ActionExecutor.execute(player, gui, warpMenuItem.leftClickActions(), key);
+                                warpMenuItem.leftClickActions().execute(player, gui, key);
                             } else if (e.isRightClick()) {
-                                ActionExecutor.execute(player, gui, warpMenuItem.rightClickActions(), key);
+                                warpMenuItem.rightClickActions().execute(player, gui, key);
                             }
                         });
                         gui.addItem(guiItem);
@@ -85,9 +84,9 @@ public class WarpsMenu {
             MenuItem emptyItem = warpsGui.emptyItem();
             var guiItem = ItemBuilder.from(emptyItem.itemStack()).asGuiItem(e -> {
                 if (e.isLeftClick()) {
-                    ActionExecutor.execute(player, gui, emptyItem.leftClickActions());
+                    emptyItem.leftClickActions().execute(player, gui);
                 } else if (e.isRightClick()) {
-                    ActionExecutor.execute(player, gui, emptyItem.rightClickActions());
+                    emptyItem.rightClickActions().execute(player, gui);
                 }
             });
             for (var slot : emptyItem.slots()) gui.setItem(slot, guiItem);

@@ -1,15 +1,14 @@
 package dev.enco.greatessentialsgui.builder;
 
-
-import it.unimi.dsi.fastutil.ints.IntArraySet;
-import it.unimi.dsi.fastutil.ints.IntSet;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class SlotsParser {
-    public IntSet parse(String settings) {
+    public int[] parse(String settings) {
         if (settings == null) return null;
-        IntSet result = new IntArraySet();
+        IntList result = new IntArrayList();
         var parts = settings.split(",");
         for (String part : parts) {
             if (part.contains("-")) {
@@ -23,6 +22,6 @@ public class SlotsParser {
                 result.add(Integer.parseInt(part));
             }
         }
-        return result;
+        return result.toIntArray();
     }
 }

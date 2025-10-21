@@ -3,7 +3,6 @@ package dev.enco.greatessentialsgui.menus;
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
 import dev.enco.greatessentialsgui.Main;
-import dev.enco.greatessentialsgui.actions.ActionExecutor;
 import dev.enco.greatessentialsgui.builder.DefaultGuiBuilder;
 import dev.enco.greatessentialsgui.objects.MenuContext;
 import dev.enco.greatessentialsgui.objects.MenuItem;
@@ -42,9 +41,9 @@ public class HomesMenu {
             MenuItem emptyItem = homesGui.emptyItem();
             var guiItem = ItemBuilder.from(emptyItem.itemStack()).asGuiItem(e -> {
                 if (e.isLeftClick()) {
-                    ActionExecutor.execute(player, gui, emptyItem.leftClickActions());
+                    emptyItem.leftClickActions().execute(player, gui);
                 } else if (e.isRightClick()) {
-                    ActionExecutor.execute(player, gui, emptyItem.rightClickActions());
+                    emptyItem.rightClickActions().execute(player, gui);
                 }
             });
             for (var slot : emptyItem.slots()) gui.setItem(slot, guiItem);
@@ -73,9 +72,9 @@ public class HomesMenu {
             item.setItemMeta(meta);
             var guiItem = ItemBuilder.from(item).asGuiItem(e -> {
                 if (e.isLeftClick()) {
-                    ActionExecutor.execute(player, gui, homeMenuItem.leftClickActions(), key);
+                    homeMenuItem.leftClickActions().execute(player, gui, key);
                 } else if (e.isRightClick()) {
-                    ActionExecutor.execute(player, gui, homeMenuItem.rightClickActions(), key);
+                    homeMenuItem.rightClickActions().execute(player, gui, key);
                 }
             });
             gui.addItem(guiItem);

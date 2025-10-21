@@ -1,6 +1,5 @@
 package dev.enco.greatessentialsgui.builder;
 
-import dev.enco.greatessentialsgui.actions.ActionExecutor;
 import dev.enco.greatessentialsgui.objects.MenuContext;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.Gui;
@@ -9,13 +8,8 @@ import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.optional.qual.OptionalBottom;
-import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.processing.SupportedOptions;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 @UtilityClass
 public class DefaultGuiBuilder {
@@ -26,9 +20,9 @@ public class DefaultGuiBuilder {
             for (var menuItem : context.menuItems()) {
                 var guiItem = ItemBuilder.from(menuItem.itemStack()).asGuiItem(e -> {
                     if (e.isLeftClick()) {
-                        ActionExecutor.execute(player, gui, menuItem.leftClickActions(), replacement);
+                        menuItem.leftClickActions().execute(player, gui, replacement);
                     } else if (e.isRightClick()) {
-                        ActionExecutor.execute(player, gui, menuItem.rightClickActions(), replacement);
+                        menuItem.rightClickActions().execute(player, gui, replacement);
                     }
                 });
                 for (var slot : menuItem.slots()) {

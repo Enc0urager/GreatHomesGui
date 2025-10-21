@@ -3,7 +3,6 @@ package dev.enco.greatessentialsgui.listeners;
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.commands.WarpNotFoundException;
 import dev.enco.greatessentialsgui.Main;
-import dev.enco.greatessentialsgui.actions.ActionExecutor;
 import dev.enco.greatessentialsgui.menus.HomesMenu;
 import dev.enco.greatessentialsgui.menus.KitPreviewMenu;
 import dev.enco.greatessentialsgui.menus.WarpsMenu;

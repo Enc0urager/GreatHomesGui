@@ -1,12 +1,14 @@
 package dev.enco.greatessentialsgui.builder;
 
 import com.destroystokyo.paper.profile.ProfileProperty;
+import dev.enco.greatessentialsgui.utils.EnumUtils;
 import dev.enco.greatessentialsgui.utils.colorizer.Colorizer;
 import dev.enco.greatessentialsgui.utils.logger.Logger;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -44,7 +46,9 @@ public class ItemBuilder {
         meta.setLore(lore);
         meta.setDisplayName(Colorizer.colorize(section.getString("name")));
         meta.setCustomModelData(section.getInt("model-data"));
-        var flags = FlagsParser.parse(section.getStringList("item-flags"));
+        var flags = EnumUtils.toEnumSet(section.getStringList("item-flags"),
+                ItemFlag.class,
+                (flag) -> Logger.warn("ItemFlag " + flag + " is not available"));
         for (var flag : flags) {
             meta.addItemFlags(flag);
         }

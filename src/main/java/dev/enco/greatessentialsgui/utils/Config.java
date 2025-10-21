@@ -1,11 +1,9 @@
 package dev.enco.greatessentialsgui.utils;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import dev.enco.greatessentialsgui.Main;
-import dev.enco.greatessentialsgui.actions.ActionRegistry;
-import dev.enco.greatessentialsgui.actions.ActionType;
-import dev.enco.greatessentialsgui.actions.context.Context;
+import dev.enco.greatessentialsgui.actions.ActionFactory;
+import dev.enco.greatessentialsgui.actions.ActionMap;
 import dev.enco.greatessentialsgui.builder.ItemBuilder;
 import dev.enco.greatessentialsgui.builder.SlotsParser;
 import dev.enco.greatessentialsgui.commands.EmptyCommand;
@@ -24,7 +22,10 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @RequiredArgsConstructor @Getter
 public class Config {
@@ -35,7 +36,7 @@ public class Config {
     private FileConfiguration config;
     private final Map<String, String> worldsTranslations = new HashMap<>();
     private final Map<String, String> kitNames = new HashMap<>();
-    private ImmutableMap<ActionType, List<Context>> kitNotAvailableActions;
+    private ActionMap kitNotAvailableActions;
     private String noPermsMessage, priority, incorrectUUID;
     @Getter
     private static boolean usingPapi;
@@ -55,7 +56,7 @@ public class Config {
         section.getKeys(false).forEach(key -> kitNames.put(key, section.getString(key)));
         Colorizer.setColorizer(config.getString("colorizer"));
         this.usingPapi = config.getBoolean("use-papi");
-        this.kitNotAvailableActions = ActionRegistry.transform(config.getStringList("actions-on-kit-not-available"));
+        this.kitNotAvailableActions = ActionFactory.from(config.getStringList("actions-on-kit-not-available"));
         this.incorrectUUID = Colorizer.colorize(config.getString("incorrect-uuid"));
         this.noPermsMessage = Colorizer.colorize(config.getString("no-perms"));
         this.priority = config.getString("event-priority");
@@ -133,8 +134,8 @@ public class Config {
         return new MenuItem(
                 ItemBuilder.build(itemSection),
                 SlotsParser.parse(itemSection.getString("slots")),
-                ActionRegistry.transform(itemSection.getStringList("on-left-click")),
-                ActionRegistry.transform(itemSection.getStringList("on-right-click"))
+                ActionFactory.from(itemSection.getStringList("on-left-click")),
+                ActionFactory.from(itemSection.getStringList("on-right-click"))
         );
     }
 
