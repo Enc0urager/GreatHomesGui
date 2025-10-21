@@ -1,6 +1,6 @@
 package dev.enco.greatessentialsgui.objects;
 
-import com.google.common.collect.ImmutableSet;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
 
 public record MenuContext(
         String title,
@@ -9,5 +9,5 @@ public record MenuContext(
         int maxPageItems,
         MenuItem extraItem,
         MenuItem emptyItem,
-        ImmutableSet<MenuItem> menuItems
+        ObjectSet<MenuItem> menuItems
 ) {}

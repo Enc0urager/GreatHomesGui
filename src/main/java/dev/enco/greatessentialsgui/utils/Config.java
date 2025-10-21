@@ -1,6 +1,5 @@
 package dev.enco.greatessentialsgui.utils;
 
-import com.google.common.collect.ImmutableSet;
 import dev.enco.greatessentialsgui.Main;
 import dev.enco.greatessentialsgui.actions.ActionFactory;
 import dev.enco.greatessentialsgui.actions.ActionMap;
@@ -12,6 +11,10 @@ import dev.enco.greatessentialsgui.objects.MenuContext;
 import dev.enco.greatessentialsgui.objects.MenuItem;
 import dev.enco.greatessentialsgui.utils.colorizer.Colorizer;
 import dev.enco.greatessentialsgui.utils.logger.Logger;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
@@ -22,20 +25,17 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 @RequiredArgsConstructor @Getter
 public class Config {
     public static String decimalFormat;
-    private ImmutableSet<String> homesOpenCommands, warpsOpenCommands, blacklistWarps, previewOpenCommands;
+    private ObjectSet<String> homesOpenCommands, warpsOpenCommands, blacklistWarps, previewOpenCommands;
     private MenuContext homesGui, warpsGui, kitPreviewGui;
     private final Main plugin;
     private FileConfiguration config;
-    private final Map<String, String> worldsTranslations = new HashMap<>();
-    private final Map<String, String> kitNames = new HashMap<>();
+    private final Object2ObjectMap<String, String> worldsTranslations = new Object2ObjectOpenHashMap<>(),
+            kitNames = new Object2ObjectOpenHashMap<>();
     private ActionMap kitNotAvailableActions;
     private String noPermsMessage, priority, incorrectUUID;
     @Getter
@@ -62,13 +62,13 @@ public class Config {
         this.priority = config.getString("event-priority");
         this.decimalFormat = config.getString("decimal-format");
         CommandMap map = getCommandMap();
-        this.homesOpenCommands = ImmutableSet.copyOf(config.getStringList("homes-open-commands"));
-        this.warpsOpenCommands = ImmutableSet.copyOf(config.getStringList("warps-open-commands"));
-        this.previewOpenCommands = ImmutableSet.copyOf(config.getStringList("preview-open-commands"));
+        this.homesOpenCommands = new ObjectOpenHashSet<>(config.getStringList("homes-open-commands"));
+        this.warpsOpenCommands = new ObjectOpenHashSet<>(config.getStringList("warps-open-commands"));
+        this.previewOpenCommands = new ObjectOpenHashSet<>(config.getStringList("preview-open-commands"));
         registerCommands(map, homesOpenCommands, false);
         registerCommands(map, warpsOpenCommands, false);
         registerCommands(map, previewOpenCommands, true);
-        this.blacklistWarps = ImmutableSet.copyOf(config.getStringList("black-list-warps"));
+        this.blacklistWarps = new ObjectOpenHashSet<>(config.getStringList("black-list-warps"));
         var worldsSection = config.getConfigurationSection("worlds-translations");
         worldsSection.getKeys(false).forEach(world -> {
             var translation = Colorizer.colorize(worldsSection.getString(world));
@@ -119,15 +119,15 @@ public class Config {
 
     }
 
-    private ImmutableSet<MenuItem> buildMenuItems(ConfigurationSection itemsSection) {
-        Set<MenuItem> menuItems = new HashSet<>();
+    private ObjectSet<MenuItem> buildMenuItems(ConfigurationSection itemsSection) {
+        ObjectSet<MenuItem> menuItems = new ObjectOpenHashSet<>();
         if (itemsSection != null && !itemsSection.getKeys(false).isEmpty()) {
             itemsSection.getKeys(false).forEach(item -> {
                 var itemSection = itemsSection.getConfigurationSection(item);
                 menuItems.add(buildItem(itemSection));
             });
         }
-        return ImmutableSet.copyOf(menuItems);
+        return menuItems;
     }
 
     private MenuItem buildItem(ConfigurationSection itemSection) {
@@ -151,7 +151,7 @@ public class Config {
         return null;
     }
 
-    private void registerCommands(CommandMap commandMap, ImmutableSet<String> commands, boolean kitPreview) {
+    private void registerCommands(CommandMap commandMap, ObjectSet<String> commands, boolean kitPreview) {
         for (String command : commands) {
             String clean = command.substring(1);
             if (isRegistered(commandMap, clean)) continue;
