@@ -50,7 +50,7 @@ public final class Main extends JavaPlugin {
         }
         var pm = this.getServer().getPluginManager();
         pm.registerEvents(listener.getListener(), this);
-        pm.registerEvents(new EssentialsListener(homesMenu), this);
+        pm.registerEvents(new EssentialsListener(homesMenu, warpsMenu), this);
         var reloadCommand = new ReloadCommand(this, pluginConfig);
         var command = getCommand("greatessentialsgui");
         command.setExecutor(reloadCommand);

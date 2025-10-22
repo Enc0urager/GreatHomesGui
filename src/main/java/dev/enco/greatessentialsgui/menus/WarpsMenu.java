@@ -27,17 +27,30 @@ public class WarpsMenu {
     public WarpsMenu(Config config) {
         this.config = config;
         this.warpsGui = config.getWarpsGui();
+        setGui();
     }
 
-    public PaginatedGui get(Player player) throws WarpNotFoundException, InvalidWorldException {
-        var gui = DefaultGuiBuilder.buildDefault(warpsGui, player, "");
-        gui.setId("homes");
-        setWarps(gui, player);
-        DefaultGuiBuilder.updateTitle(warpsGui, gui, "");
-        return gui;
+    private PaginatedGui cachedGui;
+
+    public PaginatedGui get() {
+        return cachedGui;
     }
 
-    private void setWarps(PaginatedGui gui, Player player) {
+    public void update() {
+        var viewers = cachedGui.getInventory().getViewers();
+        for (var v : viewers) v.closeInventory();
+        setGui();
+        for (var v : viewers) cachedGui.open(v);
+    }
+
+    public void setGui() {
+        cachedGui = DefaultGuiBuilder.buildDefault(warpsGui, "");
+        cachedGui.setId("warps");
+        setWarps(cachedGui);
+        DefaultGuiBuilder.updateTitle(warpsGui, cachedGui, "");
+    }
+
+    private void setWarps(PaginatedGui gui) {
         var warpMenuItem = warpsGui.extraItem();
         var warps = essentials.getWarps();
         var blacklist = config.getBlacklistWarps();
@@ -61,14 +74,15 @@ public class WarpsMenu {
 
                         String[] replacement = {String.valueOf(index[0]), key, world, owner, Placeholders.format(location.getX()),
                                 Placeholders.format(location.getY()), Placeholders.format(location.getZ())};
-                        meta.setDisplayName(Placeholders.replaceInMessage(player, meta.getDisplayName(), replacement));
+                        meta.setDisplayName(Placeholders.replaceInMessage(null, meta.getDisplayName(), replacement));
                         meta.setLore(meta.getLore().stream()
-                                .map(str -> Placeholders.replaceInMessage(player, str, replacement))
+                                .map(str -> Placeholders.replaceInMessage(null, str, replacement))
                                 .toList()
                         );
                         item.setItemMeta(meta);
 
                         var guiItem = ItemBuilder.from(item).asGuiItem(e -> {
+                            Player player = (Player) e.getWhoClicked();
                             if (e.isLeftClick()) {
                                 warpMenuItem.leftClickActions().execute(player, gui, key);
                             } else if (e.isRightClick()) {
@@ -83,6 +97,7 @@ public class WarpsMenu {
         if (index[0] == 0) {
             MenuItem emptyItem = warpsGui.emptyItem();
             var guiItem = ItemBuilder.from(emptyItem.itemStack()).asGuiItem(e -> {
+                Player player = (Player) e.getWhoClicked();
                 if (e.isLeftClick()) {
                     emptyItem.leftClickActions().execute(player, gui);
                 } else if (e.isRightClick()) {

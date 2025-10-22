@@ -12,7 +12,6 @@
 #[UPDATE] - обновить меню
 #[REOPEN] - reopen gui
 #Все материалы поддерживают basehead-id
-
 colorizer: LEGACY
 use-papi: true
 decimal-format: "#.#"

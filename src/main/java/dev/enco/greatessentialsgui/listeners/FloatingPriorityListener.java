@@ -89,7 +89,7 @@ public enum FloatingPriorityListener {
                 e.setCancelled(true);
                 var kitName = parts[1];
                 if (essentials.getKits().getKitKeys().contains(kitName))
-                    previewMenu.get(player, kitName).open(player);
+                    previewMenu.get(kitName).open(player);
                 else config.getKitNotAvailableActions().execute(player, null,  kitName);
             }
             if (homeCmds.contains(command)) {
@@ -97,11 +97,7 @@ public enum FloatingPriorityListener {
                 Main.getInstance().getHomesMenu().get(player.getUniqueId()).open(player);
             } else if (warpCmds.contains(command)) {
                 e.setCancelled(true);
-                try {
-                    warpsMenu.get(player).open(player);
-                } catch (WarpNotFoundException | InvalidWorldException ex) {
-                    throw new RuntimeException(ex);
-                }
+                warpsMenu.get().open(player);
             }
         }
     }

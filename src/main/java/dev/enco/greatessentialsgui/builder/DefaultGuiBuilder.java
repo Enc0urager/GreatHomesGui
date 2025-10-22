@@ -13,16 +13,17 @@ import java.text.MessageFormat;
 
 @UtilityClass
 public class DefaultGuiBuilder {
-    public PaginatedGui buildDefault(MenuContext context, Player player, String... replacement) {
+    public PaginatedGui buildDefault(MenuContext context, String... replacement) {
         var gui = Gui.paginated().title(Component.text(context.title()))
                 .rows(context.rows()).pageSize(context.maxPageItems()).disableAllInteractions().create();
         if (context.menuItems() != null && !context.menuItems().isEmpty()) {
             for (var menuItem : context.menuItems()) {
                 var guiItem = ItemBuilder.from(menuItem.itemStack()).asGuiItem(e -> {
+                    Player pl = (Player) e.getWhoClicked();
                     if (e.isLeftClick()) {
-                        menuItem.leftClickActions().execute(player, gui, replacement);
+                        menuItem.leftClickActions().execute(pl, gui, replacement);
                     } else if (e.isRightClick()) {
-                        menuItem.rightClickActions().execute(player, gui, replacement);
+                        menuItem.rightClickActions().execute(pl, gui, replacement);
                     }
                 });
                 for (var slot : menuItem.slots()) {

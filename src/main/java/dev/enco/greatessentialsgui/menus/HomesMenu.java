@@ -43,7 +43,7 @@ public class HomesMenu {
 
     public PaginatedGui create(Player player) {
         var user = essentials.getUser(player);
-        var gui = DefaultGuiBuilder.buildDefault(homesGui, player, "");
+        var gui = DefaultGuiBuilder.buildDefault(homesGui, "");
         gui.setId("homes");
         setHomes(gui, user, player);
         DefaultGuiBuilder.updateTitle(homesGui, gui, "");
