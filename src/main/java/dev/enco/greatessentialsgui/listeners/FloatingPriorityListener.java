@@ -1,14 +1,11 @@
 package dev.enco.greatessentialsgui.listeners;
 
 import com.earth2me.essentials.Essentials;
-import com.earth2me.essentials.commands.WarpNotFoundException;
 import dev.enco.greatessentialsgui.Main;
-import dev.enco.greatessentialsgui.menus.HomesMenu;
 import dev.enco.greatessentialsgui.menus.KitPreviewMenu;
 import dev.enco.greatessentialsgui.menus.WarpsMenu;
 import dev.enco.greatessentialsgui.utils.Config;
 import lombok.Getter;
-import net.ess3.api.InvalidWorldException;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

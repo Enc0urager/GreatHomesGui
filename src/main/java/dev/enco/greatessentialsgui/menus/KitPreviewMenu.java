@@ -4,7 +4,6 @@ import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.Kit;
 import com.earth2me.essentials.MetaItemStack;
 import com.earth2me.essentials.libs.snakeyaml.external.biz.base64Coder.Base64Coder;
-import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import dev.enco.greatessentialsgui.Main;
@@ -14,13 +13,10 @@ import dev.enco.greatessentialsgui.utils.Config;
 import dev.enco.greatessentialsgui.utils.logger.Logger;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.PaginatedGui;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import net.ess3.provider.SerializationProvider;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.InvocationTargetException;
@@ -60,7 +56,6 @@ public class KitPreviewMenu {
 
     @SneakyThrows
     private PaginatedGui create(String kitName) {
-        Logger.info("создали");
         var gui = DefaultGuiBuilder.buildDefault(context, kitName);
         gui.setId("kit " + kitName);
         setKitItems(gui, kitName);

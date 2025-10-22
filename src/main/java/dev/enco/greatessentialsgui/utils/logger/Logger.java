@@ -7,9 +7,9 @@ import org.bukkit.Bukkit;
 
 @UtilityClass
 public class Logger {
-    private static final String INFO_PREFIX = "§7(§aGreatCombat§7) §aINFO §f";
-    private static final String WARN_PREFIX = "§7(§eGreatCombat§7) §6WARN §e";
-    private static final String ERROR_PREFIX = "§7(§cGreatCombat§7) §4ERROR §c";
+    private static final String INFO_PREFIX = "§7(§aGreatEssentialsGui§7) §aINFO §f";
+    private static final String WARN_PREFIX = "§7(§eGreatEssentialsGui§7) §6WARN §e";
+    private static final String ERROR_PREFIX = "§7(§cGreatEssentialsGui§7) §4ERROR §c";
     private ILogger logger;
 
     public void setup() {
