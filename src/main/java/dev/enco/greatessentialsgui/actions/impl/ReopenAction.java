@@ -24,7 +24,7 @@ public class ReopenAction implements Action<GuiContext> {
                 break;
             }
             case "homes": {
-                plugin.getHomesMenu().get(player).open(player);
+                plugin.getHomesMenu().get(player.getUniqueId()).open(player);
                 break;
             }
             default: {

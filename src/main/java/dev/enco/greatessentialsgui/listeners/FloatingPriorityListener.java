@@ -73,7 +73,6 @@ public enum FloatingPriorityListener {
     }
 
     private abstract static class CommandListener implements Listener {
-        private final HomesMenu homesMenu = Main.getInstance().getHomesMenu();
         private final WarpsMenu warpsMenu = Main.getInstance().getWarpsMenu();
         private final KitPreviewMenu previewMenu = Main.getInstance().getKitPreviewMenu();
         private final Config config = Main.getInstance().getPluginConfig();
@@ -91,11 +90,11 @@ public enum FloatingPriorityListener {
                 var kitName = parts[1];
                 if (essentials.getKits().getKitKeys().contains(kitName))
                     previewMenu.get(player, kitName).open(player);
-                else ActionExecutor.execute(player, null, config.getKitNotAvailableActions(), kitName);
+                else config.getKitNotAvailableActions().execute(player, null,  kitName);
             }
             if (homeCmds.contains(command)) {
                 e.setCancelled(true);
-                homesMenu.get(player).open(player);
+                Main.getInstance().getHomesMenu().get(player.getUniqueId()).open(player);
             } else if (warpCmds.contains(command)) {
                 e.setCancelled(true);
                 try {

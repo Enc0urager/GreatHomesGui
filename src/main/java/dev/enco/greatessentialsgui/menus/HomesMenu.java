@@ -2,6 +2,8 @@ package dev.enco.greatessentialsgui.menus;
 
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import dev.enco.greatessentialsgui.Main;
 import dev.enco.greatessentialsgui.builder.DefaultGuiBuilder;
 import dev.enco.greatessentialsgui.objects.MenuContext;
@@ -11,8 +13,13 @@ import dev.enco.greatessentialsgui.utils.Placeholders;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.PaginatedGui;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class HomesMenu {
     private final Config config;
@@ -25,13 +32,31 @@ public class HomesMenu {
         this.homesGui = config.getHomesGui();
     }
 
-    public PaginatedGui get(Player player) {
+    private final LoadingCache<UUID, PaginatedGui> cachedGuis = Caffeine.newBuilder()
+            .expireAfterAccess(5L, TimeUnit.MINUTES)
+            .maximumSize(Bukkit.getMaxPlayers())
+            .build((uuid) -> create(Bukkit.getPlayer(uuid)));
+
+    public PaginatedGui get(UUID uuid) {
+        return cachedGuis.get(uuid);
+    }
+
+    public PaginatedGui create(Player player) {
         var user = essentials.getUser(player);
         var gui = DefaultGuiBuilder.buildDefault(homesGui, player, "");
         gui.setId("homes");
         setHomes(gui, user, player);
         DefaultGuiBuilder.updateTitle(homesGui, gui, "");
         return gui;
+    }
+
+    public void update(Player player) {
+        PaginatedGui gui = cachedGuis.getIfPresent(player.getUniqueId());
+        if (gui == null) return;
+        cachedGuis.invalidate(player.getUniqueId());
+        boolean open = gui.getInventory().getViewers().contains(player);
+        if (open) player.closeInventory();
+        if (open) get(player.getUniqueId()).open(player);
     }
 
     private void setHomes(PaginatedGui gui, User user, Player player) {
@@ -65,10 +90,10 @@ public class HomesMenu {
                     world,
             };
             meta.setDisplayName(Placeholders.replaceInMessage(player, meta.getDisplayName(), replacement));
-            meta.setLore(meta.getLore().stream()
-                    .map(str -> Placeholders.replaceInMessage(player, str, replacement))
-                    .toList()
-            );
+            List<String> newLore = new ArrayList<>();
+            for (var s : meta.getLore())
+                newLore.add(Placeholders.replaceInMessage(player, s, replacement));
+            meta.setLore(newLore);
             item.setItemMeta(meta);
             var guiItem = ItemBuilder.from(item).asGuiItem(e -> {
                 if (e.isLeftClick()) {

@@ -2,6 +2,7 @@ package dev.enco.greatessentialsgui;
 
 import com.earth2me.essentials.Essentials;
 import dev.enco.greatessentialsgui.commands.ReloadCommand;
+import dev.enco.greatessentialsgui.listeners.EssentialsListener;
 import dev.enco.greatessentialsgui.listeners.FloatingPriorityListener;
 import dev.enco.greatessentialsgui.menus.HomesMenu;
 import dev.enco.greatessentialsgui.menus.KitPreviewMenu;
@@ -47,7 +48,9 @@ public final class Main extends JavaPlugin {
             Logger.warn("Неизвестный приоритет слушателя, используем HIGHEST");
             listener = FloatingPriorityListener.HIGHEST;
         }
-        this.getServer().getPluginManager().registerEvents(listener.getListener(), this);
+        var pm = this.getServer().getPluginManager();
+        pm.registerEvents(listener.getListener(), this);
+        pm.registerEvents(new EssentialsListener(homesMenu), this);
         var reloadCommand = new ReloadCommand(this, pluginConfig);
         var command = getCommand("greatessentialsgui");
         command.setExecutor(reloadCommand);
