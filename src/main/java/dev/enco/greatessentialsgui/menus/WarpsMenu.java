@@ -15,6 +15,7 @@ import dev.triumphteam.gui.guis.PaginatedGui;
 import lombok.Setter;
 import net.ess3.api.InvalidWorldException;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -37,7 +38,7 @@ public class WarpsMenu {
     }
 
     public void update() {
-        var viewers = cachedGui.getInventory().getViewers();
+        var viewers = cachedGui.getInventory().getViewers().toArray(new HumanEntity[0]);
         for (var v : viewers) v.closeInventory();
         setGui();
         for (var v : viewers) cachedGui.open(v);
