@@ -71,22 +71,41 @@ public class KitPreviewMenu {
         Kit kit = new Kit(kitName, essentials);
         List<String> kitItems = kit.getItems();
         List<ItemStack> items = new ArrayList<>();
+
+        String currencySymbol = essentials.getSettings().getCurrencySymbol();
+
         for (String item : kitItems) {
+            if (item.startsWith(currencySymbol) || item.startsWith("/")) continue;
+
+            if (item.startsWith("slot:")) {
+                int spaceIndex = item.indexOf(" ");
+                if (spaceIndex != -1) {
+                    item = item.substring(spaceIndex + 1);
+                }
+            }
+
             final ItemStack stack;
+
             if (item.startsWith("@")) {
-                stack = serializationProvider.deserializeItem(Base64Coder.decodeLines(item.substring(1)));
+                stack = serializationProvider.deserializeItem(
+                        Base64Coder.decodeLines(item.substring(1))
+                );
             } else {
-                final String[] parts = item.split(" +");
-                final ItemStack parseStack = essentials.getItemDb().get(parts[0], parts.length > 1 ? Integer.parseInt(parts[1]) : 1);
-                if (parseStack.getType() == Material.AIR) {
-                    continue;
-                }
-                final MetaItemStack metaStack = new MetaItemStack(parseStack);
-                if (parts.length > 2) {
+                String[] parts = item.split(" +");
+                ItemStack base = essentials.getItemDb().get(
+                        parts[0],
+                        parts.length > 1 ? Integer.parseInt(parts[1]) : 1
+                );
+
+                if (base.getType() == Material.AIR) continue;
+
+                MetaItemStack metaStack = new MetaItemStack(base);
+                if (parts.length > 2)
                     metaStack.parseStringMeta(null, true, parts, 2, essentials);
-                }
+
                 stack = metaStack.getItemStack();
             }
+
             items.add(stack);
         }
         return items;
